@@ -15,7 +15,7 @@ To install dependecies
 
 ```bash
 
-make
+make install
 
 ```
 
