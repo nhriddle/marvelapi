@@ -11,6 +11,14 @@ To use this application the following go-lang libraries are needed.
     - github.com/davecgh/go-spew/spew
     - github.com/go-redis/redis/v8
 
+To install dependecies 
+
+```bash
+
+make
+
+```
+
 
 ## Configuration
 
