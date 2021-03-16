@@ -20,18 +20,18 @@ Edit the following :
 
 #### Server configurations
 server:
--  host: "localhost"
--  port: 8080
+    -  host: "localhost"
+    -  port: 8080
 
 #### Marvel API configurations
 marvelapi:
--  publickey : ""
--  privatekey: ""
+    -  publickey : ""
+    -  privatekey: ""
 
 #### Redis Config for caching
 redis:
--  host : "localhost"
--  port : 6379
+    -  host : "localhost"
+    -  port : 6379
 
 
 ## Usage
