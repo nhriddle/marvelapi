@@ -1,0 +1,23 @@
+info: {}
+paths:
+  /characters:
+    get:
+      description: Returns a list of character IDs from the marvel universe
+      operationId: getCharacters
+      responses:
+        "200":
+          $ref: '#/responses/jsonArray'
+      tags:
+      - characters
+  /characters/{id}:
+    get:
+      description: Returns details of a character's IDs
+      operationId: getCharacter
+      responses:
+        "200":
+          $ref: '#/responses/jsonObject'
+        "404":
+          $ref: '#/responses/httpResponse'
+      tags:
+      - character
+swagger: "2.0"
