@@ -74,7 +74,7 @@ The developer uses Redis as cache for the Marvel hero details. As planned it kee
 - MARVELAPI:<ID> : Keeps a JSON string with the details of the superhero
 
 ### Caching Schedule
-- At first there will be nothing within the Redis cache, that's why on the first "/characters" enpoint call we traveres all the heroes by calling the "/v1/public/characters" endpoint its response includes a field named "total" which is then used to compute if we've completed caching all the heroes on Marvel's database.
+At first there will be nothing within the Redis cache, that's why on the first "/characters" enpoint call we traveres all the heroes by calling the "/v1/public/characters" endpoint its response includes a field named "total" which is then used to compute if we've completed caching all the heroes on Marvel's database.
 
 
 Marvel's API can only display 100 results so we have to traverse it (Total hero count) / 100 considering the remainder (example : currently Marvel's total heroes are 1400+ so we need to call Marvel's API 15 times) Using the "offset" parameter we add 100 until we have the same number of heroes in our cache. While doing this we are also adding the hero details on the "MARVELAPI:<ID>" key. 
