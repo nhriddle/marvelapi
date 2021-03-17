@@ -138,12 +138,13 @@ func GetHashString(s string)string{
 	return hex.EncodeToString(array[:]);
 }
 
+
 // Get All Characters
 // swagger:route GET /characters characters getCharacters
 // Returns a list of character IDs from the marvel universe
 // responses:
 //  200 : jsonArray
-func getCharacters(w http.ResponseWriter, r *http.Request) {
+func GetCharacters(w http.ResponseWriter, r *http.Request) {
 
     w.Header().Set("Content-Type", "application/json")
 
@@ -176,7 +177,7 @@ func getCharacters(w http.ResponseWriter, r *http.Request) {
 // responses:
 //  200 : jsonObject
 //  404 : httpResponse
-func getCharacter(w http.ResponseWriter, r *http.Request) {
+func GetCharacter(w http.ResponseWriter, r *http.Request) {
 
     // Set content type to JSON
     w.Header().Set("Content-Type", "application/json")
@@ -186,39 +187,9 @@ func getCharacter(w http.ResponseWriter, r *http.Request) {
 
     val, rediserr := rdb.Get(ctx, "MARVELAPI:" + params["id"]).Result()
     if rediserr != nil {
-        /*
-        endpoint := "/characters/" +  params["id"]
-        data, _ :=callMarvelAPI(endpoint)
-
-        results := data.Data.Results
-        resultcount := len(results)
-
-        if(resultcount > 0) {
-            // store to redis
-            jsonobj, jsonerr := json.Marshal(data.Data.Results[0])
-            if jsonerr != nil {
-                log.Fatal("unable to process json object")
-            } else {
-                // insert to redis
-                jsonstr := string(jsonobj)
-                inserterr := rdb.Set(ctx, "MARVELAPI:" + params["id"]  , jsonstr, 0).Err()
-                if inserterr != nil {
-                    log.Fatal("unable to insert to redis")
-                } else {
-                    fmt.Println("Inserted to Redis!!!")
-                    json.NewEncoder(w).Encode(data.Data.Results[0])
-                }
-            }
-
-        } else {
-
-
-        }
-        */
-
         // contemplated and removed the additional call for non existing IDs let's just have it wait until the next cache reload
-        http.Error(w, "", http.StatusNotFound)
-
+        w.WriteHeader(http.StatusNotFound)
+        json.NewEncoder(w).Encode(map[string]string{"code":"404","failed": "Character Not Found"})
 
     } else {
         //json.NewEncoder(w).Encode(data.Data.Results[0])
@@ -354,6 +325,7 @@ func storeHeroes() (string) {
 
 }
 
+
 var cfg EnvConfig
 var ctx = context.Background()
 var rdb *redis.Client
@@ -377,8 +349,8 @@ func main() {
     r := mux.NewRouter()
 
     // Route Handler / Endpoints
-    r.HandleFunc("/characters", getCharacters).Methods("GET")
-    r.HandleFunc("/characters/{id}", getCharacter).Methods("GET")
+    r.HandleFunc("/characters", GetCharacters).Methods("GET")
+    r.HandleFunc("/characters/{id}", GetCharacter).Methods("GET")
 
     log.Print("Running in port " + cfg.ServerConf.Port)
     log.Fatal(http.ListenAndServe(cfg.ServerConf.Port ,r))
