@@ -90,7 +90,11 @@ This project is just the beginning. The developer learned Go Lang while doing th
 
 
 
+## Testing Progress
+Currently needing troubleshooting for my tests because of the usage of redis. (needs confirmation if it's my problem lol!). But created a unit testing document from postmant for web calls. Just make sure that the web application is running in your localhost before testing.
 
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/7c79462483588adc89ee)
 
 
 
