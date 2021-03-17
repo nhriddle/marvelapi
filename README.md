@@ -131,10 +131,12 @@ Response Code : 404
 ## API Documentation link
 There is an embeded swagger docs file when you run this application. You can visit it at:
 
+```
 http://<hostip>:8080/docs
 
-example : http://localhost:8080/docs
 
+example : http://localhost:8080/docs
+```
 
 
 
