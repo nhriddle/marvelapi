@@ -1,4 +1,20 @@
-info: {}
+basePath: /
+consumes:
+- n/a
+host: localhost:8080
+info:
+  contact:
+    email: nhriddle@gmail.com
+    name: Niel Riddle
+    url: http://www.nhriddle.com
+  description: |-
+    the purpose of this application is to provide an application
+    that caches and serves Marvel Characters and their IDs on Marvel's database.
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+  title: Marvel Characters API
+  version: 0.0.1
 paths:
   /characters:
     get:
@@ -6,18 +22,50 @@ paths:
       operationId: getCharacters
       responses:
         "200":
-          $ref: '#/responses/jsonArray'
-      tags:
-      - characters
+          $ref: '#/responses/idList'
   /characters/{id}:
     get:
-      description: Returns details of a character's IDs
+      description: Returns details of a Marvel Characters
       operationId: getCharacter
+      parameters:
+      - description: The character ID of the Marvel hero
+        format: int64
+        in: path
+        name: ID
+        required: true
+        type: integer
       responses:
         "200":
-          $ref: '#/responses/jsonObject'
+          $ref: '#/responses/result'
         "404":
-          $ref: '#/responses/httpResponse'
-      tags:
-      - character
+          $ref: '#/responses/error'
+produces:
+- application/json
+responses:
+  error:
+    description: ""
+    headers:
+      Code:
+        type: string
+      Message:
+        type: string
+  idList:
+    description: ""
+    headers:
+      IDList:
+        items:
+          type: string
+        type: array
+  result:
+    description: ""
+    headers:
+      description:
+        type: string
+      id:
+        format: int64
+        type: integer
+      name:
+        type: string
+schemes:
+- http
 swagger: "2.0"

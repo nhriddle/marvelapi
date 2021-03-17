@@ -1,18 +1,22 @@
-// Classicifation of Marvel Characters API
+// Marvel Characters API
 //
-// Documentation for Marvel Characters API
-// 
-// Schemes : http
-// BasePath : /
-// Version : 0.0.1
-// 
-// Consumes :
-// - application/json
-// 
-// Produces : 
-// - application/json
+// the purpose of this application is to provide an application
+// that caches and serves Marvel Characters and their IDs on Marvel's database.
+//
+//     Schemes: http
+//     Host: localhost:8080
+//     BasePath: /
+//     Version: 0.0.1
+//     License: MIT http://opensource.org/licenses/MIT
+//     Contact: Niel Riddle<nhriddle@gmail.com> http://www.nhriddle.com
+//
+//     Consumes:
+//     - n/a
+//
+//     Produces:
+//     - application/json
+//
 // swagger:meta
-
 package main
 
 import (
@@ -32,6 +36,7 @@ import (
     "github.com/davecgh/go-spew/spew"
     "context"
     "github.com/go-redis/redis/v8"
+    "github.com/go-openapi/runtime/middleware" 
 )
 
 // configuration structure
@@ -98,6 +103,7 @@ type Urls struct {
 	Url string  `json:"url"`
 }
 
+//swagger:response result
 type Results struct {
 	Id int `json:"id"`
 	Name string `json:"name"`
@@ -111,6 +117,29 @@ type Results struct {
 	//Events Events `json:"events"`
 	//Series Series `json:"series"`
 }
+
+//swagger:response error
+type HTTPError struct {
+    Code string
+    Message string
+}
+
+//swagger:response idList
+type IDList struct {
+    IDList []string
+
+}
+
+//swagger:parameters getCharacter
+type characterIDParameterWrapper struct {
+    // The character ID of the Marvel hero
+    // in: path
+    // required: true
+    ID int `json:id`
+
+}
+
+
 type Data struct {
 	Offset int `json:"offset"`
 	Limit int `json:"limit"`
@@ -123,14 +152,6 @@ type Feed struct {
 	Data Data  `json:"data"`
 }
 
-
-// Character Struct
-type Character struct {
-    ID      string `json:"id"`
-    Name    string `json:"name"`
-    Description  string `json:"description"`
-}
-
 // utility functions
 func GetHashString(s string)string{
 	bundle := []byte(s);
@@ -138,12 +159,11 @@ func GetHashString(s string)string{
 	return hex.EncodeToString(array[:]);
 }
 
-
 // Get All Characters
-// swagger:route GET /characters characters getCharacters
+// swagger:route GET /characters getCharacters
 // Returns a list of character IDs from the marvel universe
-// responses:
-//  200 : jsonArray
+// responses :
+//     200 : idList
 func GetCharacters(w http.ResponseWriter, r *http.Request) {
 
     w.Header().Set("Content-Type", "application/json")
@@ -171,12 +191,11 @@ func GetCharacters(w http.ResponseWriter, r *http.Request) {
 }
 
 // Get Character via ID
-// Get All Characters
-// swagger:route GET /characters/{id} character getCharacter
-// Returns details of a character's IDs
-// responses:
-//  200 : jsonObject
-//  404 : httpResponse
+// swagger:route GET /characters/{id} getCharacter 
+// Returns details of a Marvel Characters
+// responses :
+//    200 : result
+//    404 : error
 func GetCharacter(w http.ResponseWriter, r *http.Request) {
 
     // Set content type to JSON
@@ -345,12 +364,20 @@ func main() {
         DB:       0,  // use default DB
     })
 
+    // redocs config
+    opts := middleware.RedocOpts{SpecURL: "/swagger.yml"}
+    sh := middleware.Redoc(opts, nil)
+
     // Init MUX Router
     r := mux.NewRouter()
 
     // Route Handler / Endpoints
     r.HandleFunc("/characters", GetCharacters).Methods("GET")
     r.HandleFunc("/characters/{id}", GetCharacter).Methods("GET")
+    
+    // additional routes for documentation
+    r.Handle("/docs", sh)
+    r.Handle("/swagger.yml", http.FileServer(http.Dir("./")))
 
     log.Print("Running in port " + cfg.ServerConf.Port)
     log.Fatal(http.ListenAndServe(cfg.ServerConf.Port ,r))

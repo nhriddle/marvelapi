@@ -10,7 +10,7 @@ To use this application the following go-lang libraries are needed.
     - github.com/ilyakaznacheev/cleanenv
     - github.com/davecgh/go-spew/spew
     - github.com/go-redis/redis/v8
-
+    - github.com/stretchr/testify v1.7.0
 To install dependecies 
 
 ```bash
@@ -87,7 +87,7 @@ We don't need to expire thei records for  hero details because they will be upda
 
 
 - /characters
-returns an array of hero IDs from the Marvel developer API.
+Returns an array of hero IDs from the Marvel developer API.
 
 Response Sample (Success) : 
 Response Code : 200
@@ -127,6 +127,14 @@ Response Code : 404
     "failed": "Character Not Found"
 }
 ```
+
+## API Documentation link
+There is an embeded swagger docs file when you run this application. You can visit it at:
+
+http://<hostip>:8080/docs
+
+example : http://localhost:8080/docs
+
 
 
 

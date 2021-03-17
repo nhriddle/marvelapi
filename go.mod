@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/go-openapi/runtime v0.19.26 // indirect
 	github.com/go-redis/redis/v8 v8.7.1 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/ilyakaznacheev/cleanenv v1.2.5 // indirect
