@@ -76,12 +76,58 @@ The developer uses Redis as cache for the Marvel hero details. As planned it kee
 ### Caching Schedule
 At first there will be nothing within the Redis cache, that's why on the first "/characters" enpoint call we traveres all the heroes by calling the "/v1/public/characters" endpoint its response includes a field named "total" which is then used to compute if we've completed caching all the heroes on Marvel's database.
 
-
 Marvel's API can only display 100 results so we have to traverse it (Total hero count) / 100 considering the remainder (example : currently Marvel's total heroes are 1400+ so we need to call Marvel's API 15 times) Using the "offset" parameter we add 100 until we have the same number of heroes in our cache. While doing this we are also adding the hero details on the "MARVELAPI:<ID>" key. 
 
 We expire the "MARVELAPI:IDS" 24 hours after it was created using the redis SETEX function. This reinitializes and refreshes the values for the "MARVELAPI:IDS" and adds additional heroes on the "MARVELAPI:<ID>" key. 
 
 We don't need to expire thei records for  hero details because they will be updated when the "MARVELAPI:IDS" key is updated. This will also minimize us calling the "/v1/public/characters/<ID>" endpoint from Marvel's developer portal. This will also put us within the limit for the current "3000" request limit per month.
+
+
+## API Endpoints
+
+
+- /characters
+returns an array of hero IDs from the Marvel developer API.
+
+Response Sample (Success) : 
+Response Code : 200
+```json
+[
+    "1011334",
+    "1017100",
+    "1009144",
+    "1010699",
+    "1009146",
+    "1016823",
+    "1009148",
+    "1009149"
+]
+
+```
+
+- /characters/{id}
+returns details of a certain hero using its ID
+
+Response Sample (Success) : 
+Response Code : 200
+```json
+{
+    "id": 1017100,
+    "name": "A-Bomb (HAS)",
+    "description": "Rick Jones has been Hulk's best bud since day one, but now he's more than a friend...he's a teammate! Transformed by a Gamma energy explosion, A-Bomb's thick, armored skin is just as strong and powerful as it is blue. And when he curls into action, he uses it like a giant bowling ball of destruction! "
+}
+```
+
+Response Sample (Not Found):
+Response Code : 404
+
+```json
+{
+    "code": "404",
+    "failed": "Character Not Found"
+}
+```
+
 
 
 
